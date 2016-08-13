@@ -7,14 +7,18 @@ var MoveState = {
 var Game = {	
     preload : function() {
 		game.load.spritesheet('ss', 'Images/sheet.png', 56, 71.125, 136);
+		game.load.image('imgBack', 'Images/back.png');
     },
 
     create: function () {
 		//	Enable p2 physics
 		game.physics.startSystem(Phaser.Physics.ARCADE);
+		
+		// Background
+		game.add.sprite(0, 0, 'imgBack');
 
 		// Player animations
-		player = game.add.sprite(0, 400, 'ss');
+		player = game.add.sprite(20, 600, 'ss');
 		player.animations.add('walk', [34,35,36,37,38,39,40,41,42,43,44]);
 		player.animations.add('idle', [17,18,19,17,17,17,18,19,17,17,18,19,20,85,86,87,86,85,20,19,17]);
 		player.animations.add('hurt', [21,22,23,24,25,26,27,28]);
