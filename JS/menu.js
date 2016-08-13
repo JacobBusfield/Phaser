@@ -1,15 +1,14 @@
 var Menu = {
 
     preload : function() {
-        game.load.image(',menu', '.images/ball.png');
+        game.load.image('imgStart', 'Images/start.png');
     },
 
     create: function () {
-		this.add.sprite(0, 0, 'menu');
-        //this.add.button(0, 0, 'menu', this.startGame, this);
+		this.add.button(0, 0, 'imgStart', this.startGame, this);
     },
 
-    /* startGame: function () {
+    startGame: function () {
         this.state.start('Game');
-    } */
+    }
 };
