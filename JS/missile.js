@@ -44,9 +44,11 @@ var Missile = function(game, x, y) {
     // Start emitting smoke particles one at a time (explode=false) with a
     // lifespan of this.SMOKE_LIFETIME at 50ms intervals
     this.smokeEmitter.start(false, this.SMOKE_LIFETIME, 50);
+	
+	this.targetX = 0;
+	this.targetY = 0;
 };
 
-// Missiles are a type of Phaser.Sprite
 Missile.prototype = Object.create(Phaser.Sprite.prototype);
 Missile.prototype.constructor = Missile;
 
@@ -65,7 +67,7 @@ Missile.prototype.update = function() {
     this.smokeEmitter.y = this.y;
 
     // Calculate the angle from the missile to the player
-	var targetAngle = this.game.math.angleBetween( this.x, this.y, player.x-25, player.y-35 );
+	var targetAngle = this.game.math.angleBetween( this.x, this.y, this.targetX, this.targetY);
 
     // Add our "wobble" factor to the targetAngle to make the missile wobble
     // Remember that this.wobble is tweening (above)
@@ -169,7 +171,7 @@ function getExplosion(x, y) {
 
         // Add an animation for the explosion that kills the sprite when the
         // animation is complete
-        var animation = explosion.animations.add('boom', [0,1,2,3], 60, false);
+        var animation = explosion.animations.add('boom', [0,1,2,3], 30, false);
         animation.killOnComplete = true;
 
         // Add the explosion sprite to the group
@@ -194,3 +196,9 @@ function getExplosion(x, y) {
     // Return the explosion itself in case we want to do anything else with it
     return explosion;
 };
+
+// set this missile is heading.
+function setTarget(m, x, y){
+	m.targetX = x;
+	m.targetY = y;
+}
