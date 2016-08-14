@@ -1,6 +1,16 @@
 // Player constructor
-var Player = function(game, x, y) {
+var Player = function(game, x, y) 
+{
 	Phaser.Sprite.call(this, game, x, y, 'ss');
+	
+	// Set up keyboard controls
+	cursors = game.input.keyboard.createCursorKeys();
+	wasd = {
+		up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+		down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+		left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+		right: game.input.keyboard.addKey(Phaser.Keyboard.D),
+	};
 
 	// Player animations
 	this.animations.add('walk', [34,35,36,37,38,39,40,41,42,43,44]);
@@ -21,7 +31,6 @@ var Player = function(game, x, y) {
 	
 	// Enable phyiscs on player
 	game.physics.enable(this, Phaser.Physics.ARCADE);
-	game.physics.arcade.gravity.y = 1000;
 	
 	// Add weapon to player
 	this.weapon = game.add.weapon(10, 'imgBullet');

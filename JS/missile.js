@@ -1,5 +1,9 @@
+// Constants
+MAX_MISSILES = 10;
+
 // Missile constructor
-var Missile = function(game, x, y) {
+var Missile = function(game, x, y) 
+{
 	Phaser.Sprite.call(this, game, x, y, 'imgMissile');
 
     // Set the pivot point for this sprite to the center
@@ -10,7 +14,7 @@ var Missile = function(game, x, y) {
 
     // Motion Constants
     this.SPEED = 150; 			// missile speed pixels/second
-    this.TURN_RATE = 2; 		// turn rate in degrees/frame
+    this.TURN_RATE = 1; 		// turn rate in degrees/frame
     this.WOBBLE_LIMIT = 15; 	// degrees
     this.WOBBLE_SPEED = 250; 	// milliseconds
     this.SMOKE_LIFETIME = 2000; // milliseconds
@@ -152,6 +156,29 @@ function launchMissile(x, y) {
     // Move the missile to the given coordinates
     missile.x = x;
     missile.y = y;
+
+    return missile;
+};
+// With angle
+function launchMissile(x, y, angle) {
+    // // Get the first dead missile from the missileGroup
+    var missile = this.missileGroup.getFirstDead();
+
+    // If there aren't any available, create a new one
+    if (missile === null) {
+        missile = new Missile(this.game);
+        this.missileGroup.add(missile);
+    }
+
+    // Revive the missile (set it's alive property to true)
+    // You can also define a onRevived event handler in your explosion objects
+    // to do stuff when they are revived.
+    missile.revive();
+
+    // Move the missile to the given coordinates
+    missile.x = x;
+    missile.y = y;
+	missile.angle = angle;
 
     return missile;
 };
