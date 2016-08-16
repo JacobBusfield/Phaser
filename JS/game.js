@@ -60,12 +60,21 @@ var Game = {
 		// Missile Collision
 		missileGroup.forEachAlive(function(m) 
 		{
-			// Floor or player
+			// Player
 			tempDistance = game.math.distance(m.x, m.y, p.x-24, p.y-33);
-			if ((tempDistance < 25)||(m.y > 580))
+			if (tempDistance < 25)
 			{
-				m.kill();
 				getExplosion(m.x, m.y);
+				m.kill();
+				p.hit();
+			}
+			
+			// Floor
+			tempDistance = game.math.distance(m.x, m.y, p.x-24, p.y-33);
+			if (m.y > 580)
+			{
+				getExplosion(m.x, m.y);
+				m.kill();
 			}
 			
 			// Missiles
@@ -76,8 +85,8 @@ var Game = {
 					tempDistance = game.math.distance(m.x, m.y, m2.x, m2.y);
 				if (tempDistance < 15)
 				{
-					m.kill();
 					getExplosion(m.x, m.y);
+					m.kill();
 					m2.kill();
 				}
 				}
@@ -90,8 +99,8 @@ var Game = {
 				tempDistance = game.math.distance(m.x, m.y, b.x, b.y);
 				if (tempDistance < 12)
 				{
-					m.kill();
 					getExplosion(m.x, m.y);
+					m.kill();
 					b.kill();
 				}
 			}, this);
