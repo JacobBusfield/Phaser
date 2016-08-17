@@ -53,13 +53,30 @@ var Player = function(game, x, y)
 	//  Modify a few player properties
 	this.body.bounce.y = 0;
 	this.body.collideWorldBounds = true;
+	
+	//
+	this.laser = game.add.audio('laser');
+	this.shots = 0;
 };
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
+	
+	
 	playerMovement(this); // Keyboard Controls
+	if (this.shots != this.weapon.shots)
+	{
+		this.shots = this.weapon.shots;
+		this.laser.play();
+	}
+	
+	if(this.weapon.onFire)
+	{
+		//laser.play();
+	}
+	
 	if (this.health <= 0)
 	{
 		this.kill();

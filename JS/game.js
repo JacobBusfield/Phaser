@@ -13,6 +13,14 @@ var Game = {
 		game.load.image('imgSmoke', 'Images/smoke.png');
 		game.load.spritesheet('imgExplosion', 'Images/explosion.png', 128, 128);
 		game.load.spritesheet('imgRaven', 'Images/raven2.png', 66.6666, 66.6666, 54);
+		
+		//
+		game.load.spritesheet('rain', 'Images/rain.png', 17, 17);
+		
+		//
+		game.load.audio('laser', 'Audio/laser.wav');
+		game.load.audio('explode', 'Audio/explode.wav');
+		game.load.audio('music', 'Audio/noSleep.mp3');
     },
 
     create: function () {
@@ -33,16 +41,50 @@ var Game = {
 		// Missile objects
 		missileGroup = game.add.group();
 		explosionGroup = game.add.group();
+		
+		
+		//////////////////////////////////////////////////////////
+		emitter = game.add.emitter(game.world.centerX, 0, 400);
+		emitter.width = game.world.width;
+
+		emitter.makeParticles('rain');
+
+		emitter.minParticleScale = 0.1;
+		emitter.maxParticleScale = 0.5;
+
+		emitter.setYSpeed(300, 500);
+		emitter.setXSpeed(-5, 5);
+
+		emitter.minRotation = 0;
+		emitter.maxRotation = 0;
+
+		emitter.start(false, 1600, 5, 0);
+		//////////////////////////////////////////////////////////
+		
+		
+		explode = game.add.audio('explode');
+		music = game.add.audio('music');
+		music.loop = true;
+		music.play();
+		
     },
 
     update: function () 
-	{		
+	{	
+		if (!p.exists)
+		{
+			score = 20;
+			this.state.start('Menu');
+		}
+
+
+	
 		// TEST CODE. //-------------------------------------------
 		// If there are fewer than MAX_MISSILES, launch a new one
 		if (missileGroup.countLiving() < 0) {
 			// Set the launch point to a random location below the bottom edge
 			// of the stage
-			launchMissile(game.rnd.integerInRange(100, game.width-100), 20);
+			launchMissile(game.rnd.integerInRange(100, game.width-100), 20,0);
 		}
 		
 		if (rGroup.countLiving()<5) 
@@ -51,6 +93,9 @@ var Game = {
 		}
 		//---------------------------------------------------------
 
+		
+		
+		
 		// Update where missiles are heading
 		missileGroup.forEachAlive(function(m) 
 		{
@@ -65,6 +110,7 @@ var Game = {
 			if (tempDistance < 25)
 			{
 				getExplosion(m.x, m.y);
+				explode.play();
 				m.kill();
 				p.hit();
 			}
@@ -74,6 +120,7 @@ var Game = {
 			if (m.y > 580)
 			{
 				getExplosion(m.x, m.y);
+				explode.play();
 				m.kill();
 			}
 			
@@ -86,6 +133,7 @@ var Game = {
 				if (tempDistance < 15)
 				{
 					getExplosion(m.x, m.y);
+					explode.play();
 					m.kill();
 					m2.kill();
 				}
@@ -100,6 +148,7 @@ var Game = {
 				if (tempDistance < 12)
 				{
 					getExplosion(m.x, m.y);
+					explode.play();
 					m.kill();
 					b.kill();
 				}
