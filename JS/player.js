@@ -5,7 +5,7 @@ JUMP_SPEED = 400
 // Player constructor
 var Player = function(game, x, y) 
 {
-	Phaser.Sprite.call(this, game, x, y, 'ss');
+	Phaser.Sprite.call(this, game, x, y, 'imgPlayer');
 	
 	// Set up keyboard controls
 	cursors = game.input.keyboard.createCursorKeys();
@@ -55,7 +55,7 @@ var Player = function(game, x, y)
 	this.body.collideWorldBounds = true;
 	
 	//
-	this.laser = game.add.audio('laser');
+	this.laser = game.add.audio('sLaser');
 	this.shots = 0;
 };
 

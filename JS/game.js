@@ -1,26 +1,11 @@
 var MoveState = {
 	LEFT:1,
-	RIGHT:2,
-	IDLE:3,
+	RIGHT:2
 };
 
 var Game = {	
     preload : function() {
-		game.load.spritesheet('ss', 'Images/sheet.png', 56, 71.125, 136);
-		game.load.image('imgBack', 'Images/back.png');
-		game.load.image('imgBullet', 'Images/projectile.png');
-		game.load.image('imgMissile', 'Images/missile.png');
-		game.load.image('imgSmoke', 'Images/smoke.png');
-		game.load.spritesheet('imgExplosion', 'Images/explosion.png', 128, 128);
-		game.load.spritesheet('imgRaven', 'Images/raven2.png', 66.6666, 66.6666, 54);
 		
-		//
-		game.load.spritesheet('rain', 'Images/rain.png', 17, 17);
-		
-		//
-		game.load.audio('laser', 'Audio/laser.wav');
-		game.load.audio('explode', 'Audio/explode.wav');
-		game.load.audio('music', 'Audio/noSleep.mp3');
     },
 
     create: function () {
@@ -34,39 +19,50 @@ var Game = {
 		// Player
 		p = this.game.add.existing( new Player(this.game, 50, 600) );
 		
-		
-		//
+		// Missile carrying ravens.
 		rGroup = game.add.group();
 		
 		// Missile objects
 		missileGroup = game.add.group();
 		explosionGroup = game.add.group();
 		
-		
-		//////////////////////////////////////////////////////////
+		// Rain
 		emitter = game.add.emitter(game.world.centerX, 0, 400);
 		emitter.width = game.world.width;
-
-		emitter.makeParticles('rain');
-
+		emitter.makeParticles('imgRain');
 		emitter.minParticleScale = 0.1;
 		emitter.maxParticleScale = 0.5;
-
 		emitter.setYSpeed(300, 500);
 		emitter.setXSpeed(-5, 5);
-
 		emitter.minRotation = 0;
 		emitter.maxRotation = 0;
-
 		emitter.start(false, 1600, 5, 0);
-		//////////////////////////////////////////////////////////
+
+		// Lightning
+		// Make the world a bit bigger than the stage so we can shake the camera
+		game.world.setBounds(-5, -5, game.width + 10, game.height + 10);
+		/* lGroup = game.add.group(); */ ////////////////////////////////////////////////////////////
+		this.game.add.existing( new Lightning(game) );
+		explode = game.add.audio('sExplode');
+		thunder = game.add.audio('sThunder');
 		
 		
-		explode = game.add.audio('explode');
-		music = game.add.audio('music');
-		music.loop = true;
-		music.play();
-		
+		// Objects have long run time, so dont let them be overwritten and forgotten about as
+		// instead of being 'collected' theyy continue playing.
+		if (typeof game.raining == 'undefined')
+		{
+			game.raining = game.add.audio('sRaining');
+			game.raining.loop = true;
+			game.raining.play();
+		}
+		if (typeof game.music == 'undefined')
+		{
+			game.music = game.add.audio('sMusic');
+			game.music.loop = true;
+			game.music.allowMultiple = false;
+			game.music.volume = 0.5;
+			game.music.play();
+		}
     },
 
     update: function () 
@@ -89,8 +85,13 @@ var Game = {
 		
 		if (rGroup.countLiving()<5) 
 		{
-			launchRaven(game.rnd.integerInRange(0, 200))
+			launchRaven(game.rnd.integerInRange(0, 200));
 		}
+		
+/* 		if (lGroup.countLiving()<5) 
+		{
+			launchLightning();
+		} */
 		//---------------------------------------------------------
 
 		
