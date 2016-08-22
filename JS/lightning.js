@@ -9,7 +9,6 @@ var Lightning = function(game)
 	// Lightning marker variables
 	Phaser.Sprite.call(this, game, 20, 20, 'imgMarker');
 	this.animations.add('go', [0,1,2,3,4,4,4,4,4,4]);
-	this.animations.play('go',2,true);
 	this.visible = false;
     this.anchor.setTo(0.5, 1);
 	
@@ -71,7 +70,7 @@ function launchBolt()
 	if (this.prep == Prep.WARN)
 	{
 		// Draw marker
-		this.animations.currentAnim.frame = 1;
+		this.animations.play('go',2,true);
 		this.visible = true;
 		
 		// Set random location for strike
@@ -96,6 +95,7 @@ function launchBolt()
 		// Use period variable to wait maxPeriod function calls before setting marker
 		if (this.period >= this.maxPeriod)
 		{
+			this.animations.stop(null, true); // Stop animation so it can be restarted from start
 			this.period = 0;
 			this.prep = Prep.WARN;
 		}
