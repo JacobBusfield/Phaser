@@ -48,7 +48,17 @@ function launchRaven(y) {
     raven.revive();
 	raven.transformed = false;
 
-	raven.x = -Math.floor(Math.random() * 1000);
+	raven.x = -20;
+	
+	// Don't let spawned ravens overlap
+	this.rGroup.forEachAlive(function(r) 
+	{
+		if (raven.x >= r.x - 20){
+			raven.x = r.x - 20 - Math.floor(Math.random() * 20);
+		}
+	}, this);
+	
+	//raven.x = -Math.floor(Math.random() * 1000);
     raven.y = y;
 
     return raven;

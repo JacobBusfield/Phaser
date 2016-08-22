@@ -39,12 +39,11 @@ var Game = {
 		emitter.start(false, 1600, 5, 0);
 
 		// Lightning
-		// Make the world a bit bigger than the stage so we can shake the camera
-		game.world.setBounds(-5, -5, game.width + 10, game.height + 10);
-		/* lGroup = game.add.group(); */ ////////////////////////////////////////////////////////////
-		this.game.add.existing( new Lightning(game) );
 		explode = game.add.audio('sExplode');
 		thunder = game.add.audio('sThunder');
+		lightning = this.game.add.existing( new Lightning(game) );
+		// Make the world a bit bigger than the stage so we can shake the camera
+		game.world.setBounds(-5, -5, game.width + 10, game.height + 10);
 		
 		
 		// Objects have long run time, so dont let them be overwritten and forgotten about as
@@ -87,11 +86,6 @@ var Game = {
 		{
 			launchRaven(game.rnd.integerInRange(0, 200));
 		}
-		
-/* 		if (lGroup.countLiving()<5) 
-		{
-			launchLightning();
-		} */
 		//---------------------------------------------------------
 
 		
@@ -110,9 +104,7 @@ var Game = {
 			tempDistance = game.math.distance(m.x, m.y, p.x-24, p.y-33);
 			if (tempDistance < 25)
 			{
-				getExplosion(m.x, m.y);
-				explode.play();
-				m.kill();
+				missileHit(m);
 				p.hit();
 			}
 			
@@ -120,9 +112,7 @@ var Game = {
 			tempDistance = game.math.distance(m.x, m.y, p.x-24, p.y-33);
 			if (m.y > 580)
 			{
-				getExplosion(m.x, m.y);
-				explode.play();
-				m.kill();
+				missileHit(m);
 			}
 			
 			// Missiles
@@ -133,9 +123,7 @@ var Game = {
 					tempDistance = game.math.distance(m.x, m.y, m2.x, m2.y);
 				if (tempDistance < 15)
 				{
-					getExplosion(m.x, m.y);
-					explode.play();
-					m.kill();
+					missileHit(m);
 					m2.kill();
 				}
 				}
@@ -148,13 +136,18 @@ var Game = {
 				tempDistance = game.math.distance(m.x, m.y, b.x, b.y);
 				if (tempDistance < 12)
 				{
-					getExplosion(m.x, m.y);
-					explode.play();
-					m.kill();
+					missileHit(m);
 					b.kill();
 				}
 			}, this);
 		}, this);
 	}
 };
+
+function missileHit(m)
+{
+	getExplosion(m.x, m.y);
+	explode.play();
+	m.kill();
+}
 

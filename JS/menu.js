@@ -22,18 +22,14 @@ var Menu = {
 		game.load.spritesheet('imgRaven', 'Images/raven2.png', 66.6666, 66.6666, 54);
 		game.load.spritesheet('imgPlayer', 'Images/sheet.png', 56, 71.125, 136);
 		game.load.spritesheet('imgRain', 'Images/rain.png', 17, 17);
+		game.load.spritesheet('imgMarker', 'Images/marker.png', 20, 60);
 		//
 		// Audio
 		game.load.audio('sLaser', 'Audio/laser.wav');
 		game.load.audio('sExplode', 'Audio/explode.wav');
 		game.load.audio('sThunder', 'Audio/thunder.wav');
 		game.load.audio('sRaining', 'Audio/raining.wav');
-		game.load.audio('sMusic', 'Audio/noSleep.mp3');
-		
-		
-		
-		game.load.spritesheet('imgMarker', 'Images/marker.png', 30, 90);
-		
+		game.load.audio('sMusic', 'Audio/noSleep.mp3');		
     },
 
     create: function () {

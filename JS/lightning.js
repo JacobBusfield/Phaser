@@ -8,9 +8,13 @@ var Lightning = function(game)
 {
 	// Lightning marker variables
 	Phaser.Sprite.call(this, game, 20, 20, 'imgMarker');
-	this.animations.add('go', [0,1,2,3,4,4,4,4,4,4]);
+	//this.animations.add('go', [0,1,2,3,4,4,4,4,4,4]);
+	this.animations.add('go', [0,1,2,3,4,5,6,7,8,9,9,9,9]);
+	this.animations.add('hold', [5,5,5,5,4,3,2,1,0,0,0,0,0,0,0]);
 	this.visible = false;
     this.anchor.setTo(0.5, 1);
+	
+	this.graphics = game.add.graphics(0, 0);
 	
 	// used to determine how often to cause lightning strikes.
 	this.prep = Prep.IDLE;
@@ -45,23 +49,6 @@ var Lightning = function(game)
 Lightning.prototype = Object.create(Phaser.Sprite.prototype);
 Lightning.prototype.constructor = Lightning;
 
-//////////////////// DOESNT YET WORK ////////////
-// NEED TO GET THIS FILE INDEPENDENT.
-/* function launchLightning() {
-    // Get the first dead missile from the missileGroup
-    var bolt = this.lGroup.getFirstDead();
-
-    // If there aren't any available, create a new one
-    if (bolt === null) {
-        bolt = new Lightning(this.game);
-        this.lGroup.add(bolt);
-    }
-
-    bolt.revive();
-
-    return bolt;
-}; */
-//////////////////// DOESNT YET WORK ////////////
 
 function launchBolt() 
 {
@@ -69,29 +56,40 @@ function launchBolt()
 	
 	if (this.prep == Prep.WARN)
 	{
-		// Draw marker
-		this.animations.play('go',2,true);
-		this.visible = true;
-		
 		// Set random location for strike
 		this.x = Math.floor(Math.random() * 1024);
 		this.y = 600
+		
+		// Draw marker
+		this.animations.play('go',4,true);
+		this.visible = true;
+		
+		// Damage region.
+		this.graphics.beginFill(0x010000, 0.05);
+		this.graphics.drawCircle(this.x, this.y-55, 300);
+		this.graphics.endFill();
 		
 		// Next zap() call is strike.
 		this.prep = Prep.ZAP;		
 	}
 	else if (this.prep == Prep.ZAP)
 	{
-		// Remove marker
-		this.visible = false;
+		// Marker retreats
+		this.animations.play('hold',4,true);
+		this.graphics.clear();
 		
-		zap(this,this.x,this.y);
+		// Lightning hits marker top
+		zap(this,this.x,this.y-55);
 		
 		// Next zap() call is idle.
 		this.prep = Prep.IDLE;
 	}
 	else if (this.prep == Prep.IDLE)
 	{
+		// Remove marker
+		this.visible = false;
+		this.graphics.clear();
+		
 		// Use period variable to wait maxPeriod function calls before setting marker
 		if (this.period >= this.maxPeriod)
 		{
@@ -109,10 +107,18 @@ function launchBolt()
 // Create a lightning bolt
 function zap(bolt, x, y) {
 	// hit player if they are close.
-	if (game.math.distance( p.x, p.y, x, y) < 100) 
+	if (game.math.distance( p.x-24, p.y-33, x, y) < 150) 
 	{
 		p.hit();
 	}
+	// hit missile if its close
+	missileGroup.forEachAlive(function(m) 
+	{
+		if (game.math.distance( m.x, m.y, x, y) < 150) 
+		{
+			missileHit(m);
+		}
+	},this);
 
     // Rotate the lightning sprite so it goes in the
     // direction of the pointer
