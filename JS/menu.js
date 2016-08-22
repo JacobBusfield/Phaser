@@ -1,5 +1,3 @@
-score = 0;
-
 var Menu = {
     preload : function() {
 		// Loading Screen
@@ -44,10 +42,17 @@ var Menu = {
 		credits = game.add.text(0, 0, "Music by jmagnum (jmagnum.newgrounds.com)", style1);
 		credits.setTextBounds(0, 100, 1024, 800);
 		
-		if (score > 0)
+		if (score != 0)
 		{
+			if (highScore < score)
+			{
+				highScore = score;
+			}
 			scoreText = game.add.text(0, 0, "Score: " + score, style2);
-			scoreText.setTextBounds(0, 100, 1024, 100);
+			scoreText.setTextBounds(0, 40, 1024, 100);
+			
+			highScoreText = game.add.text(0, 0, "High Score: " + highScore, style2);
+			highScoreText.setTextBounds(0, 100, 1024, 100);
 		}
     },
 

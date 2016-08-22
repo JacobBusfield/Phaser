@@ -109,6 +109,7 @@ function zap(bolt, x, y) {
 	// hit player if they are close.
 	if (game.math.distance( p.x-24, p.y-33, x, y) < 150) 
 	{
+		minusScore(game, p.x, p.y-50, 100);
 		p.hit();
 	}
 	// hit missile if its close

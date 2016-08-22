@@ -148,9 +148,6 @@ function launchMissile(x, y) {
         this.missileGroup.add(missile);
     }
 
-    // Revive the missile (set it's alive property to true)
-    // You can also define a onRevived event handler in your explosion objects
-    // to do stuff when they are revived.
     missile.revive();
 
     // Move the missile to the given coordinates

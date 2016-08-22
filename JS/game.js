@@ -21,6 +21,14 @@ var Game = {
 		
 		// Missile carrying ravens.
 		rGroup = game.add.group();
+
+
+		// textGroup used for the score.
+		textGroup = game.add.group();
+		score = 0;
+		
+		this.styleScore = { font: "bold 18px Arial", fill: "#b0b0b0", boundsAlignH: "center", boundsAlignV: "middle" };
+		this.scoreText = game.add.text(900, 20, "Score: " + 0, this.styleScore);
 		
 		// Missile objects
 		missileGroup = game.add.group();
@@ -66,9 +74,10 @@ var Game = {
 
     update: function () 
 	{	
+		this.scoreText.text = "Score: " + score;
+	
 		if (!p.exists)
 		{
-			score = 20;
 			this.state.start('Menu');
 		}
 
@@ -104,6 +113,7 @@ var Game = {
 			tempDistance = game.math.distance(m.x, m.y, p.x-24, p.y-33);
 			if (tempDistance < 25)
 			{
+				minusScore(this.game, p.x, p.y-50, 100);
 				missileHit(m);
 				p.hit();
 			}
@@ -112,6 +122,7 @@ var Game = {
 			tempDistance = game.math.distance(m.x, m.y, p.x-24, p.y-33);
 			if (m.y > 580)
 			{
+				addScore(this.game, m.x, m.y-20, 5);
 				missileHit(m);
 			}
 			
@@ -121,11 +132,12 @@ var Game = {
 				if (m != m2)
 				{
 					tempDistance = game.math.distance(m.x, m.y, m2.x, m2.y);
-				if (tempDistance < 15)
-				{
-					missileHit(m);
-					m2.kill();
-				}
+					if (tempDistance < 15)
+					{
+						addScore(this.game, m.x, m.y, 25);
+						missileHit(m);
+						m2.kill();
+					}
 				}
 				
 			}, this);
@@ -136,6 +148,7 @@ var Game = {
 				tempDistance = game.math.distance(m.x, m.y, b.x, b.y);
 				if (tempDistance < 12)
 				{
+					addScore(this.game, m.x, m.y, 10);
 					missileHit(m);
 					b.kill();
 				}
