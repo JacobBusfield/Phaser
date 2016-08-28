@@ -11,11 +11,14 @@ var Menu = {
 		// 
 		// Images 
 		game.load.image('imgBack', 'Images/back.png');
+		game.load.image('imgTutorial', 'Images/tutorialScreen.png');
 		game.load.image('imgBullet', 'Images/projectile.png');
 		game.load.image('imgMissile', 'Images/missile.png');
 		game.load.image('imgSmoke', 'Images/smoke.png');
 		//
 		// Sprite sheets
+		game.load.spritesheet('imgStartButton', 'Images/startButton.png', 193, 67);
+		game.load.spritesheet('imgTutorialButton', 'Images/tutorialButton.png', 193, 67);
 		game.load.spritesheet('imgExplosion', 'Images/explosion.png', 128, 128);
 		game.load.spritesheet('imgRaven', 'Images/raven2.png', 66.6666, 66.6666, 54);
 		game.load.spritesheet('imgPlayer', 'Images/sheet.png', 56, 71.125, 136);
@@ -31,32 +34,44 @@ var Menu = {
     },
 
     create: function () {
-		this.add.button(0, 0, 'imgStart', this.startGame, this);
+		// background image
+		this.bgImg = this.add.sprite(0, 0, 'imgStart');
 		
-		style2 = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-		clickToStartText = game.add.text(0, 0, "Click to Start", style2);
-		clickToStartText.setTextBounds(0, 400, 1024, 100);
+		// start / tutorial buttons
+		this.buttonStart = game.add.button(game.world.centerX - 95, 450, 'imgStartButton', this.startGame, this, 1,0);
+		this.buttonTutorial = game.add.button(game.world.centerX - 95, 360, 'imgTutorialButton', this.tutorial, this, 1,0);
+
+		// giving recongnition to music's author
+		this.style1 = { font: "16px Arial", fill: "#555", boundsAlignH: "center", boundsAlignV: "middle" };
+		this.credits = game.add.text(0, 0, "Music by jmagnum (jmagnum.newgrounds.com)", this.style1);
+		this.credits.setTextBounds(0, 100, 1024, 900);
 		
+		this.style2 = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 		
-		style1 = { font: "16px Arial", fill: "#555", boundsAlignH: "center", boundsAlignV: "middle" };
-		credits = game.add.text(0, 0, "Music by jmagnum (jmagnum.newgrounds.com)", style1);
-		credits.setTextBounds(0, 100, 1024, 800);
-		
+		// if score has been registered, show it on menu.
 		if (score != 0)
 		{
 			if (highScore < score)
 			{
 				highScore = score;
 			}
-			scoreText = game.add.text(0, 0, "Score: " + score, style2);
-			scoreText.setTextBounds(0, 40, 1024, 100);
+			this.scoreText = game.add.text(0, 0, "Score: " + score, this.style2);
+			this.scoreText.setTextBounds(0, 40, 1024, 100);
 			
-			highScoreText = game.add.text(0, 0, "High Score: " + highScore, style2);
-			highScoreText.setTextBounds(0, 100, 1024, 100);
+			this.highScoreText = game.add.text(0, 0, "High Score: " + highScore, this.style2);
+			this.highScoreText.setTextBounds(0, 100, 1024, 100);
 		}
     },
 
     startGame: function () {
         this.state.start('Game');
+    },
+	
+	tutorial: function () {
+		this.bgImg.loadTexture('imgTutorial');
+		this.buttonTutorial.kill();
+		this.credits.kill();
+		this.scoreText.kill();
+		this.highScoreText.kill();
     }
 };
