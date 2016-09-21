@@ -1,6 +1,14 @@
 // Constants
 MAX_MISSILES = 10;
 
+// Motion Constants
+SPEED = 120; 			// missile speed pixels/second
+TURN_RATE = 1; 		// turn rate in degrees/frame
+WOBBLE_LIMIT = 15; 	// degrees
+WOBBLE_SPEED = 250; 	// milliseconds
+SMOKE_LIFETIME = 2000; // milliseconds
+AVOID_DISTANCE = 30; 	// pixels
+
 // Missile constructor
 var Missile = function(game, x, y) 
 {
@@ -12,21 +20,13 @@ var Missile = function(game, x, y)
     // Enable physics on the missile
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
 
-    // Motion Constants
-    this.SPEED = 150; 			// missile speed pixels/second
-    this.TURN_RATE = 1; 		// turn rate in degrees/frame
-    this.WOBBLE_LIMIT = 15; 	// degrees
-    this.WOBBLE_SPEED = 250; 	// milliseconds
-    this.SMOKE_LIFETIME = 2000; // milliseconds
-    this.AVOID_DISTANCE = 30; 	// pixels
-
     // Create a variable called wobble that tweens back and forth between
-    // -this.WOBBLE_LIMIT and +this.WOBBLE_LIMIT forever
-    this.wobble = this.WOBBLE_LIMIT;
+    // -WOBBLE_LIMIT and +WOBBLE_LIMIT forever
+    this.wobble = WOBBLE_LIMIT;
     this.game.add.tween(this)
         .to(
-            { wobble: -this.WOBBLE_LIMIT },
-            this.WOBBLE_SPEED, Phaser.Easing.Sinusoidal.InOut, true, 0,
+            { wobble: -WOBBLE_LIMIT },
+            WOBBLE_SPEED, Phaser.Easing.Sinusoidal.InOut, true, 0,
             Number.POSITIVE_INFINITY, true
         );
 
@@ -40,14 +40,14 @@ var Missile = function(game, x, y)
     this.smokeEmitter.setYSpeed(-80, -50); // make smoke drift upwards
 
     // Make particles fade out after 1000ms
-    this.smokeEmitter.setAlpha(1, 0, this.SMOKE_LIFETIME, Phaser.Easing.Linear.InOut);
+    this.smokeEmitter.setAlpha(1, 0, SMOKE_LIFETIME, Phaser.Easing.Linear.InOut);
 
     // Create the actual particles
     this.smokeEmitter.makeParticles('imgSmoke');
 
     // Start emitting smoke particles one at a time (explode=false) with a
-    // lifespan of this.SMOKE_LIFETIME at 50ms intervals
-    this.smokeEmitter.start(false, this.SMOKE_LIFETIME, 50);
+    // lifespan of SMOKE_LIFETIME at 50ms intervals
+    this.smokeEmitter.start(false, SMOKE_LIFETIME, 50);
 	
 	this.targetX = 0;
 	this.targetY = 0;
@@ -96,7 +96,7 @@ Missile.prototype.update = function() {
         var distance = this.game.math.distance(this.x, this.y, m.x, m.y);
 
         // If the missile is too close...
-        if (distance < this.AVOID_DISTANCE) {
+        if (distance < AVOID_DISTANCE) {
             // Chose an avoidance angle of 90 or -90 (in radians)
             avoidAngle = Math.PI/2; // zig
             if (Math.floor(Math.random() * 2)) avoidAngle *= -1; // zag
@@ -106,7 +106,7 @@ Missile.prototype.update = function() {
     // Add the avoidance angle to steer clear of other missiles
     targetAngle += avoidAngle;
 
-    // Gradually (this.TURN_RATE) aim the missile towards the target angle
+    // Gradually (TURN_RATE) aim the missile towards the target angle
     if (this.rotation !== targetAngle) {
         // Calculate difference between the current angle and targetAngle
         var delta = targetAngle - this.rotation;
@@ -117,23 +117,36 @@ Missile.prototype.update = function() {
 
         if (delta > 0) {
             // Turn clockwise
-            this.angle += this.TURN_RATE;
+            this.angle += TURN_RATE;
         } else {
             // Turn counter-clockwise
-            this.angle -= this.TURN_RATE;
+            this.angle -= TURN_RATE;
         }
 
         // Just set angle to target angle if they are close
-        if (Math.abs(delta) < this.game.math.degToRad(this.TURN_RATE)) {
+        if (Math.abs(delta) < this.game.math.degToRad(TURN_RATE)) {
             this.rotation = targetAngle;
         }
     }
 
-    // Calculate velocity vector based on this.rotation and this.SPEED
-    this.body.velocity.x = Math.cos(this.rotation) * this.SPEED;
-    this.body.velocity.y = Math.sin(this.rotation) * this.SPEED;
+    // Calculate velocity vector based on this.rotation and SPEED
+    this.body.velocity.x = Math.cos(this.rotation) * SPEED;
+    this.body.velocity.y = Math.sin(this.rotation) * SPEED;
 	
 
+};
+
+// Improves missile's speed and turn rate each time this function is called.
+function improveMissile()
+{
+  if (SPEED < 250)
+  {
+    SPEED += 5;
+  }
+  if (TURN_RATE < 2)
+  {
+    TURN_RATE += 0.025;
+  }
 };
 
 // Try to get a missile from the missileGroup
