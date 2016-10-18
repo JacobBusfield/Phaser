@@ -5,8 +5,8 @@ var Boot = {
 		game.load.image('imgStart', 'Images/start.png');
     
     // and loading bar..
-    game.load.image('preloaderBar', 'images/load2.png');
-    game.load.image('preloaderBarGray', 'images/load1.png');
+    game.load.image('preloaderBar', 'Images/load2.png');
+    game.load.image('preloaderBarGray', 'Images/load1.png');
 	}, 
 	
 	create: function () {
