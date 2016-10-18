@@ -1,10 +1,24 @@
 var Menu = {
     preload : function() {
 		// Loading Screen
-        game.start = game.add.sprite(0, 0, 'imgStart');
+    game.start = game.add.sprite(0, 0, 'imgStart');
 		style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 		loadingText = game.add.text(0, 0, "Loading", style);
-		loadingText.setTextBounds(0, 400, 1024, 100);
+		loadingText.setTextBounds(0, 385, 1024, 100);
+    
+    this.game.paddingBot = 64;
+		var barWidth = 600;
+		var barHeight = 50;
+		var barPaddingBot = 25
+    var barX = (this.game.width - barWidth) / 2;
+    var barY = this.game.height - barHeight - barPaddingBot - this.game.paddingBot;
+    this.add.sprite(barX, barY, 'preloaderBarGray');
+		this.preloadBar = this.add.sprite(barX, barY, 'preloaderBar');
+
+		//	This sets the preloadBar sprite as a loader sprite.
+		//	What that does is automatically crop the sprite from 0 to full-width
+		//	as the files below are loaded in.
+		this.load.setPreloadSprite(this.preloadBar);
 				
 		
 		/** GAME ASSETS **/
@@ -34,6 +48,9 @@ var Menu = {
     },
 
     create: function () {
+    //	Once the load has finished we disable the crop because we're going to sit in the update loop for a short while as the music decodes
+    this.preloadBar.cropEnabled = false;
+      
 		// background image
 		this.bgImg = this.add.sprite(0, 0, 'imgStart');
 		
